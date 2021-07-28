@@ -65,10 +65,9 @@ public class SwiftSumupPlugin: NSObject, FlutterPlugin {
                 result(pluginResponse.toDictionary())
                 return
             }
-            let total = NSDecimalNumber(nonretainedObject: totalDouble)
+            let total = NSDecimalNumber(floatLiteral: totalDouble)
             let title = (payment["title"] as? String) ?? ""
              
-           
             let request = CheckoutRequest(total: total, title: title, currencyCode: currencyCode)
             
             request.foreignTransactionID = payment["foreignTransactionId"] as? String
