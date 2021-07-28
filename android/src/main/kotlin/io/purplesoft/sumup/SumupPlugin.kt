@@ -2,7 +2,6 @@ package io.purplesoft.sumup
 
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.NonNull
@@ -21,6 +20,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry
+
 
 
 /** SumupPlugin */
@@ -78,6 +78,7 @@ class SumupPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, PluginRegis
         when (call.method) {
             "initSDK" -> initSDK(call.arguments as String).flutterResult()
             "login" -> login()
+            "loginWithToken" -> loginWithToken(call.argument<String>("token")!!)
             "isLoggedIn" -> isLoggedIn().flutterResult()
             "getMerchant" -> getMerchant().flutterResult()
             "openSettings" -> openSettings()
@@ -105,6 +106,10 @@ class SumupPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, PluginRegis
 
     private fun login() {
         val sumupLogin = SumUpLogin.builder(affiliateKey).build()
+        SumUpAPI.openLoginActivity(activity, sumupLogin, SumUpTask.LOGIN.code)
+    }
+    private fun loginWithToken(token:String) {
+        val sumupLogin = SumUpLogin.builder(affiliateKey).accessToken(token).build()
         SumUpAPI.openLoginActivity(activity, sumupLogin, SumUpTask.LOGIN.code)
     }
 

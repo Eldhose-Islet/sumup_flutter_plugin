@@ -27,12 +27,19 @@ public class SwiftSumupPlugin: NSObject, FlutterPlugin {
                 pluginResponse.message = ["result": success]
                 result(pluginResponse.toDictionary())
             }
+        case "loginWithToken":
+            let args = call.arguments as! [String: Any]
+            let token = args["token"] as! String
+            self.loginWithTocken(tocken: token, completion: { success in
+                pluginResponse.message = ["result": success]
+                result(pluginResponse.toDictionary())
+            })
         case "isLoggedIn":
             let isLoggedIn = self.isLoggedIn()
             pluginResponse.message = ["result": isLoggedIn]
             pluginResponse.status = isLoggedIn
             result(pluginResponse.toDictionary())
-            
+        
         case "getMerchant":
             let merchant = self.getMerchant()
             pluginResponse.message = ["merchantCode": merchant?.merchantCode ?? "", "currencyCode": merchant?.currencyCode ?? ""]
@@ -48,8 +55,21 @@ public class SwiftSumupPlugin: NSObject, FlutterPlugin {
         case "checkout":
             let args = call.arguments as! [String: Any]
             let payment = args["payment"] as! [String: Any]
-            
-            let request = CheckoutRequest(total: NSDecimalNumber(floatLiteral: payment["total"] as! Double), title: payment["title"] as? String, currencyCode: payment["currency"] as! String, paymentOptions: [.cardReader, .mobilePayment])
+            guard let totalDouble =  payment["total"] as? Double else {
+                pluginResponse.message = ["error":"Total is needed" ]
+                result(pluginResponse.toDictionary())
+                return
+            }
+            guard let currencyCode =  payment["currency"] as? String, !currencyCode.isEmpty else {
+                pluginResponse.message = ["error":"currency is needed should be ISO 4217 code format " ]
+                result(pluginResponse.toDictionary())
+                return
+            }
+            let total = NSDecimalNumber(nonretainedObject: totalDouble)
+            let title = (payment["title"] as? String) ?? ""
+             
+           
+            let request = CheckoutRequest(total: total, title: title, currencyCode: currencyCode)
             
             request.foreignTransactionID = payment["foreignTransactionId"] as? String
             request.tipAmount = NSDecimalNumber(floatLiteral: payment["tip"] as! Double)
@@ -75,18 +95,15 @@ public class SwiftSumupPlugin: NSObject, FlutterPlugin {
                                           "installments": checkoutResult.additionalInfo?["installments"] ?? "",
                                           "products": checkoutResult.additionalInfo?["products"] ?? ""]
                 
-                let resultCard = checkoutResult.additionalInfo?["card"] as? [String: Any?]
-                let cardType = resultCard!["type"]
-                let cardLastDigits = resultCard!["last_4_digits"]
-                
-                if cardType != nil {
-                    pluginResponse.message["cardType"] = cardType!
+                if let resultCard = checkoutResult.additionalInfo?["card"] as? [String: Any?] {
+                    if let cardType = resultCard["type"] {
+                        pluginResponse.message["cardType"] = cardType
+                    }
+                    if let cardLastDigits = resultCard["last_4_digits"] {
+                        pluginResponse.message["cardLastDigits"] = cardLastDigits
+                    }
+                    
                 }
-                
-                if cardLastDigits != nil {
-                    pluginResponse.message["cardLastDigits"] = cardType!
-                }
-                
                 result(pluginResponse.toDictionary())
             }
                
@@ -120,6 +137,12 @@ public class SwiftSumupPlugin: NSObject, FlutterPlugin {
         { loggedIn, _ in
             completion(loggedIn)
         }
+    }
+    private func loginWithTocken(tocken:String, completion: @escaping ((Bool) -> Void)) {
+        SumUpSDK.login(withToken: tocken) { loggedIn, _ in
+            completion(loggedIn)
+        }
+        
     }
     
     private func isLoggedIn() -> Bool {

@@ -21,22 +21,22 @@
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
-  <true/>
-  <key>NSAppTransportSecurity</key>
-  <dict>
-  <key>NSAllowsArbitraryLoads</key>
-  <true/>
-  <key>NSExceptionDomains</key>
-  <dict>
-  <key>sumup.com</key>
-  <dict>
-  <key>NSExceptionAllowsInsecureHTTPLoads</key>
-  <true/>
-  <key>NSIncludesSubdomains</key>
-  <true/>
-  </dict>
-  </dict>
-  </dict>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>sumup.com</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>The app needs to connect to Bluetooth peripherals to detect the SumUp Card Terminal correctly. Please confirm with OK as you cannot use your card reader otherwise.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
@@ -50,19 +50,18 @@
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIRequiresFullScreen</key>
-  <true/>
-  <key>UISupportedInterfaceOrientations</key>
-  <array>
-    <string>UIInterfaceOrientationPortrait</string>
-    <string>UIInterfaceOrientationLandscapeRight</string>
-  </array>
-  <key>UISupportedInterfaceOrientations~ipad</key>
-  <array>
-    <string>UIInterfaceOrientationPortrait</string>
-    <string>UIInterfaceOrientationLandscapeRight</string>
-    <string>UIInterfaceOrientationLandscapeLeft</string>
-    <string>UIInterfaceOrientationPortraitUpsideDown</string>
-  </array>
-	
+	<true/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+	</array>
 </dict>
 </plist>
