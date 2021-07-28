@@ -53,6 +53,15 @@ class Sumup {
     return SumupPluginResponse.fromMap(method);
   }
 
+  /// Should be called after [init]
+  static Future<SumupPluginResponse> loginWith(String token) async {
+    _throwIfNotInitialized();
+    final method =
+        await _channel.invokeMethod("loginWithToken", {'token': token});
+    final response = SumupPluginResponse.fromMap(method);
+    return SumupPluginResponse.fromMap(response.message!);
+  }
+
   static Future<bool?> get isLoggedIn async {
     _throwIfNotInitialized();
     final method = await _channel.invokeMethod('isLoggedIn');

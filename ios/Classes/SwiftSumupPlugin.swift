@@ -85,20 +85,20 @@ public class SwiftSumupPlugin: NSObject, FlutterPlugin {
                 
                 pluginResponse.message = ["success": checkoutResult.success,
                                           "transactionCode": checkoutResult.transactionCode ?? "",
-                                          "amount": checkoutResult.additionalInfo?["amount"] ?? "",
-                                          "currency": checkoutResult.additionalInfo?["currency"] ?? "",
-                                          "vatAmount": checkoutResult.additionalInfo?["vat_amount"] ?? "",
-                                          "tipAmount": checkoutResult.additionalInfo?["tip_amount"] ?? "",
+                                          "amount": (checkoutResult.additionalInfo?["amount"] ) ?? 0.0,
+                                          "currency": (checkoutResult.additionalInfo?["currency"] as? String) ?? "",
+                                          "vatAmount": (checkoutResult.additionalInfo?["vat_amount"]) ?? 0.0,
+                                          "tipAmount": (checkoutResult.additionalInfo?["tip_amount"] ) ?? 0.0,
                                           "paymentType": checkoutResult.additionalInfo?["payment_type"] ?? "",
                                           "entryMode": checkoutResult.additionalInfo?["entry_mode"] ?? "",
-                                          "installments": checkoutResult.additionalInfo?["installments"] ?? "",
+                                          "installments": checkoutResult.additionalInfo?["installments"] ?? 0,
                                           "products": checkoutResult.additionalInfo?["products"] ?? ""]
                 
                 if let resultCard = checkoutResult.additionalInfo?["card"] as? [String: Any?] {
-                    if let cardType = resultCard["type"] {
+                    if let cardType = resultCard["type"] as? String{
                         pluginResponse.message["cardType"] = cardType
                     }
-                    if let cardLastDigits = resultCard["last_4_digits"] {
+                    if let cardLastDigits = resultCard["last_4_digits"] as? String{
                         pluginResponse.message["cardLastDigits"] = cardLastDigits
                     }
                     
