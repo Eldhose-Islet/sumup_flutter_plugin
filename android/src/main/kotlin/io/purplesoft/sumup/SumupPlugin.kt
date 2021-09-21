@@ -192,14 +192,17 @@ class SumupPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, PluginRegis
         Log.d(TAG, "onActivityResult - RequestCode: $requestCode - Result Code: $resultCode")
         
         val resulCodes = intArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
-
-        if (resultCode !in resulCodes) return false
-
         val currentOp: SumUpPluginResponseWrapper = when (SumUpTask.valueOf(requestCode)) {
             SumUpTask.LOGIN -> operations["login"]!!
             SumUpTask.CHECKOUT -> operations["checkout"]!!
             SumUpTask.SETTINGS -> operations["openSettings"]!!
             else -> currentOperation
+        }
+        if (resultCode !in resulCodes){
+            currentOp.response.message = mutableMapOf("responseCode" to resultCode, "requestCode" to requestCode, "result" to false)
+            currentOp.response.status = true
+            currentOp.flutterResult()
+            return false
         }
 
         if (data != null && data.extras != null) {
@@ -211,7 +214,7 @@ class SumupPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, PluginRegis
 
             when (SumUpTask.valueOf(requestCode)) {
                 SumUpTask.LOGIN -> {
-                    currentOp.response.message = mutableMapOf("isLoggedIn" to resultCodeBoolean, "responseCode" to resultCodeInt, "responseMessage" to resultMessage, "requestCode" to requestCode)
+                    currentOp.response.message = mutableMapOf("isLoggedIn" to resultCodeBoolean, "responseCode" to resultCodeInt, "responseMessage" to resultMessage, "requestCode" to requestCode, "result" to resultCodeBoolean)
                     currentOp.flutterResult()
                 }
                 SumUpTask.CHECKOUT -> {
@@ -249,7 +252,7 @@ class SumupPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, PluginRegis
             } else {
                 currentOp.response.message = mutableMapOf("errors" to "Intent Data and/or Extras are null or empty")
                 currentOp.response.status = false
-                //currentOp.flutterResult()
+                currentOp.flutterResult()
             }
         }
         return currentOp.response.status
