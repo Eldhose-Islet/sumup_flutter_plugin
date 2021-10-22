@@ -6,6 +6,7 @@ class SumupPayment {
     this.currency = 'EUR',
     this.tip = .0,
     this.skipSuccessScreen = false,
+    this.skipFailedScreen = false,
     this.foreignTransactionId,
     this.saleItemsCount = 0,
   });
@@ -20,6 +21,9 @@ class SumupPayment {
   /// Skips success screen. Useful if you want to provide your own success message.
   bool skipSuccessScreen;
 
+  /// Skips failed screen.
+  bool skipFailedScreen;
+
   int saleItemsCount;
 
   Map<String, dynamic> toMap() => {
@@ -28,6 +32,7 @@ class SumupPayment {
         'currency': currency,
         'tip': tip,
         'skipSuccessScreen': skipSuccessScreen,
+        'skipFailedScreen': skipFailedScreen,
         'foreignTransactionId': foreignTransactionId,
         'saleItemsCount': saleItemsCount,
       };
